@@ -9,6 +9,10 @@ import Register from "./Auth/Register";
 const router = createBrowserRouter([
     {
         path: "/",
+        element: <App/>,
+    },
+    {
+        path: "/login",
         element: <Login></Login>,
     },
     {

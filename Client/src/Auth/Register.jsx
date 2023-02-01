@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const Register = (props) => {
-  
     const nav = useNavigate();
 
     const handleSubmit = (link) => {
@@ -13,7 +12,7 @@ const Register = (props) => {
     return (
         <div>
             <div className="h-screen md:flex">
-                <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-blue-700 i justify-around items-center hidden">
+                <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-[#091E61] to-[#091e61ee] i justify-around items-center hidden">
                     <div>
                         <h1 className="text-white font-bold text-6xl font-sans ">
                             QuizTastic
