@@ -11,14 +11,28 @@ const Login = (props) => {
         email: "",
         password: "",
     };
-    console.log("hello woelsd");
 
     const formik = useFormik({
         initialValues: initialValues,
         validate: (values) => {
             const errors = {};
+            const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
             if (!values.email) {
                 errors.email = toast.error("Email address required");
+            } else if (values.email == "") {
+                errors.email = toast.error("Email can't be empty string");
+            } else if (!values.password) {
+                errors.password = toast.error("Password Required...!");
+            } else if (values.password.includes(" ")) {
+                errors.password = toast.error("Wrong Password...!");
+            } else if (values.password.length < 4) {
+                errors.password = toast.error(
+                    "Password must be more than 4 characters long"
+                );
+            } else if (!specialChars.test(values.password)) {
+                errors.password = toast.error(
+                    "Password must have special character"
+                );
             }
 
             return errors;
@@ -28,6 +42,7 @@ const Login = (props) => {
 
         onSubmit: async (values) => {
             console.log(values);
+            nav("/");
         },
     });
 

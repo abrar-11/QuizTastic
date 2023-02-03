@@ -10,7 +10,8 @@ import Quiz from "./Pages/Quiz";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <App/>,
+        // element: <App/>,
+        element: <h1>hellow</h1>,
     },
     {
         path: "/login",
@@ -20,10 +21,10 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register/>,
     },
-    {
-        path: "/quiz",
-        element: <Quiz/>,
-    },
+    // {
+    //     path: "/quiz",
+    //     element: <Quiz/>,
+    // },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

@@ -1,14 +1,50 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useFormik } from "formik";
 
 const Register = (props) => {
     const nav = useNavigate();
-
-    const handleSubmit = (link) => {
-        console.log(link);
-        props.setUser(type);
-        nav("/");
+    const initialValues = {
+        fullName: "",
+        email: "",
+        userName: "",
+        password: "",
+        confirmPassword: "",
     };
+    const formik = useFormik({
+        initialValues: initialValues,
+        validate: (values) => {
+            const errors = {};
+            const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+            if (!values.email) {
+                errors.email = toast.error("Email address required");
+            } else if (values.email == "") {
+                errors.email = toast.error("Email can't be empty string");
+            } else if (!values.password) {
+                errors.password = toast.error("Password Required...!");
+            } else if (values.password.includes(" ")) {
+                errors.password = toast.error("Wrong Password...!");
+            } else if (values.password.length < 4) {
+                errors.password = toast.error(
+                    "Password must be more than 4 characters long"
+                );
+            } else if (!specialChars.test(values.password)) {
+                errors.password = toast.error(
+                    "Password must have special character"
+                );
+            }
+
+            return errors;
+        },
+        validateOnBlur: false,
+        validateOnChange: false,
+
+        onSubmit: async (values) => {
+            console.log(values);
+            nav("/");
+        },
+    });
+
     return (
         <div>
             <div className="h-screen md:flex">
@@ -28,9 +64,15 @@ const Register = (props) => {
                         <div className="relative bg-white px-6 shadow-xl rounded-lg ring-1 ring-gray-900/5 sm:max-w-xl lg:w-80 sm:mx-auto py-4">
                             <div className=" my-5">
                                 <div className="py-4 text-base leading-7  text-gray-600 flex flex-col items-center mx-8">
-                                    <form className="w-full ">
+                                    <form
+                                        className="w-full "
+                                        onSubmit={formik.handleSubmit}
+                                    >
                                         <div className="relative z-0 mb-6 w-full group">
                                             <input
+
+
+                                                {...formik.getFieldProps('fullName')}
                                                 type="text"
                                                 name="fullName"
                                                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b border-gray-800 focus:border-indigo-800 appearance-none focus:outline-none focus:ring-0 peer"
@@ -46,8 +88,9 @@ const Register = (props) => {
                                         </div>
                                         <div className="relative z-0 mb-6 w-full group">
                                             <input
-                                                type="email"
-                                                name="email"
+                                             {...formik.getFieldProps('username')}
+                                                type="text"
+                                                name="username"
                                                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b border-gray-800 focus:border-indigo-800 appearance-none focus:outline-none focus:ring-0 peer"
                                                 placeholder=" "
                                                 required
@@ -61,6 +104,7 @@ const Register = (props) => {
                                         </div>
                                         <div className="relative z-0 mb-6 w-full group">
                                             <input
+                                             {...formik.getFieldProps('email')}
                                                 type="email"
                                                 name="email"
                                                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b border-gray-800 focus:border-indigo-800 appearance-none focus:outline-none focus:ring-0 peer"
@@ -77,8 +121,9 @@ const Register = (props) => {
 
                                         <div className="relative z-0 mb-6 w-full group">
                                             <input
-                                                type="email"
-                                                name="email"
+                                             {...formik.getFieldProps('password')}
+                                                type="password"
+                                                name="password"
                                                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b border-gray-800 focus:border-indigo-800 appearance-none focus:outline-none focus:ring-0 peer"
                                                 placeholder=" "
                                                 required
@@ -90,16 +135,15 @@ const Register = (props) => {
                                                 Create Password
                                             </label>
                                         </div>
+                                        <div className="flex flex-row justify-center items-center text-sm text-gray-800 my-8  sm:space-y-0">
+                                            <button
+                                                className="cursor-pointer bg-gray-800 sm:px-8 px-4 py-3 text-gray-50 uppercase"
+                                                type="submit"
+                                            >
+                                                Create Account
+                                            </button>
+                                        </div>
                                     </form>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-row justify-center items-center text-sm text-gray-800 my-8  sm:space-y-0">
-                                <div
-                                    className="cursor-pointer bg-gray-800 sm:px-8 px-4 py-3 text-gray-50 uppercase"
-                                    onClick={() => handleSubmit(type)}
-                                >
-                                    Create Account
                                 </div>
                             </div>
 
