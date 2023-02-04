@@ -22,9 +22,9 @@ const Login = (props) => {
             } else if (values.email == "") {
                 errors.email = toast.error("Email can't be empty string");
             } else if (!values.password) {
-                errors.password = toast.error("Password Required...!");
+                errors.password = toast.error("Password Required");
             } else if (values.password.includes(" ")) {
-                errors.password = toast.error("Wrong Password...!");
+                errors.password = toast.error("Wrong Password");
             } else if (values.password.length < 4) {
                 errors.password = toast.error(
                     "Password must be more than 4 characters long"
