@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import "colors";
 import connectDB from "./database/connection.js";
+import morgan from "morgan";
 
 dotenv.config();
 
