@@ -1,19 +1,15 @@
-import UserModel from "../model/User.model";
+import UserModel from "../model/User.model.js";
 import bcrypt from "bcrypt";
 const register = async (req, res) => {
     try {
+        console.log(req.body);
         const { username, password, email, fullName } = req.body;
 
         // promise for check username
         const isUsernameExists = new Promise((resolve, reject) => {
             UserModel.findOne({ username }, (err, user) => {
-                if (err) reject(new Error(err));
-                if (user)
-                    reject(
-                        new Error({
-                            error: "Username Already exists.. ",
-                        })
-                    );
+                if (err) reject(err);
+                if (user) reject("Username already Exists");
                 resolve();
             });
         });
@@ -21,51 +17,51 @@ const register = async (req, res) => {
         // promise for check email address
         const isEmailExists = new Promise((resolve, reject) => {
             UserModel.findOne({ email }, (err, email) => {
-                if (err) reject(new Error(err));
-                if (email)
-                    reject(
-                        new Error({
-                            error: "Email Already exists.. ",
-                        })
-                    );
+                if (err) reject(err);
+                if (email) reject("Email already Exists");
                 resolve();
             });
         });
 
-        Promise.all([isUsernameExists, isEmailExists]).then(() => {
-            if (password) {
-                bcrypt.hash(password, 10, function (err, hash) {
-                    if (err) {
-                        return res.status(500).send({
-                            success: false,
-                            error: "Unable to hashed password this time..",
-                        });
-                    } else {
-                        const user = new UserModel({
-                            email,
-                            username,
-                            password: hash,
-                            fullName,
-                        });
-
-                        user.save()
-                            .then(() => {
-                                res.status(200).send({
-                                    success: true,
-                                    data: user,
-                                });
-                            })
-                            .catch((err) => {
-                                return res.status(500).send({
-                                    success: false,
-                                    error: err,
-                                });
+        Promise.all([isUsernameExists, isEmailExists])
+            .then(() => {
+                if (password) {
+                    bcrypt.hash(password, 10, function (err, hash) {
+                        if (err) {
+                            return res.status(500).send({
+                                success: false,
+                                error: "Unable to hashed password this time..",
                             });
-                    }
-                    // Store hash in your password DB.
-                });
-            }
-        });
+                        } else {
+                            const user = new UserModel({
+                                email,
+                                username,
+                                password: hash,
+                                fullName,
+                            });
+
+                            user.save()
+                                .then((result) => {
+                                    res.status(200).send({
+                                        success: true,
+                                        data: result,
+                                    });
+                                })
+                                .catch((err) => {
+                                    return res.status(500).send({
+                                        success: false,
+                                        error: err,
+                                    });
+                                });
+                        }
+                        // Store hash in your password DB.
+                    });
+                }
+            })
+            .catch((err) => {
+                // 👇️ .catch block ran:  An error occurred
+                res.status(500).send({ success: false, err });
+            });
     } catch (error) {
         res.status(500).send({ success: false, error });
     }

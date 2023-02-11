@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import "colors";
 import connectDB from "./database/connection.js";
 import morgan from "morgan";
-
+import authRoute from "./routes/auth.js"
 dotenv.config();
 
 const port = process.env.PORT || 5000;
@@ -17,6 +17,8 @@ app.use(cors());
 app.use(morgan("tiny"));
 app.disable("x-powered-by");
 
+
+app.use('/api',authRoute)
 // Start Server when Database connected successfully
 connectDB()
     .then(() => {
