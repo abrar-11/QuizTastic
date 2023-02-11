@@ -1,6 +1,6 @@
 import UserModel from "../model/User.model.js";
 import bcrypt from "bcrypt";
-const register = async (req, res) => {
+const register = (req, res) => {
     try {
         console.log(req.body);
         const { username, password, email, fullName } = req.body;
@@ -67,7 +67,35 @@ const register = async (req, res) => {
     }
 };
 const login = async (req, res) => {
-    res.json("login");
+    try {
+        console.log(req.body);
+        const { password, email } = req.body;
+
+        UserModel.findOne({ email })
+            .then((user) => {
+                // compare password
+                bcrypt.compare(password, user.password).then((isPassword) => {
+                    if (!isPassword) {
+                        res.status(500).send({
+                            success: false,
+                            error: "Incorrect Password",
+                        });
+                    } else {
+                        return res.status(200).send({
+                            success: false,
+                            error: "Successfully Signed",
+                        });
+                    }
+                });
+            })
+            .catch((err) =>
+                res
+                    .status(500)
+                    .send({ success: false, error: "Incorrect Email" })
+            );
+    } catch (error) {
+        res.status(500).send({ success: false, error });
+    }
 };
 const registerMail = async (req, res) => {
     res.json("register");
