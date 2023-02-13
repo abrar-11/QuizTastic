@@ -1,5 +1,7 @@
 import UserModel from "../model/User.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 const register = (req, res) => {
     try {
         console.log(req.body);
@@ -66,7 +68,7 @@ const register = (req, res) => {
         res.status(500).send({ success: false, error });
     }
 };
-const login = async (req, res) => {
+const login = (req, res) => {
     try {
         console.log(req.body);
         const { password, email } = req.body;
@@ -81,9 +83,21 @@ const login = async (req, res) => {
                             error: "Incorrect Password",
                         });
                     } else {
+                        // JWT Setup
+                        const token = jwt.sign(
+                            {
+                                userId: user._id,
+                                username: user.username,
+                            },
+                            process.env.JWT_SECRET,
+                            {
+                                expiresIn: "24h",
+                            }
+                        );
+
                         return res.status(200).send({
-                            success: false,
-                            error: "Successfully Signed",
+                            success: true,
+                            token: token,
                         });
                     }
                 });
@@ -103,8 +117,13 @@ const registerMail = async (req, res) => {
 const authenticate = async (req, res) => {
     res.json("authenticate");
 };
-const userInfo = async (req, res) => {
-    res.json("User Info");
+const userInfo = (req, res) => {
+    try {
+        const { id } = req.body;
+        
+    } catch (error) {
+        res.status(500).send({ success: false, error });
+    }
 };
 const generateOtp = async (req, res) => {
     res.json("generateOtp");
