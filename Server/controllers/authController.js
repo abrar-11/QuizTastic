@@ -97,6 +97,7 @@ const login = (req, res) => {
 
                         return res.status(200).send({
                             success: true,
+                            data: user,
                             token: token,
                         });
                     }
@@ -119,8 +120,30 @@ const authenticate = async (req, res) => {
 };
 const userInfo = (req, res) => {
     try {
-        const { id } = req.body;
-        
+        const { username } = req.params;
+        if (!username)
+            return res.status(500).send({
+                success: false,
+                error: "Please provide username",
+            });
+
+        UserModel.findOne({ username })
+            .then((user) => {
+                if (!user)
+                    return res.status(500).send({
+                        success: false,
+                        error: "No user Found",
+                    });
+                const { password, ...restData } = Object.assign(
+                    {},
+                    user.toJSON()
+                );
+                res.status(200).send({ success: true, data: restData });
+            })
+            .catch((error) => {
+                console.log("error: ", error);
+                res.status(500).send({ success: false, error });
+            });
     } catch (error) {
         res.status(500).send({ success: false, error });
     }
